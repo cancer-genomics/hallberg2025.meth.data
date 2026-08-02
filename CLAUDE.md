@@ -16,8 +16,8 @@ sequence — `MET-02a` (add serving here) → `MAN-03` (repoint the manuscript p
 `BASE-03` (remove the old copy) — with a green `verify_snapshot.R` at each boundary. Ship
 both copies in the middle; do not try to do it in one step.
 
-Unlike `OsSeqExpData`, this directory has **no nested `.git`** — it is tracked directly in
-the outer repo.
+Like `OsSeqExpData`, this directory now has its own nested `.git` (`MET-09`, private repo
+`cancer-genomics/OsMethExpData`) in addition to being tracked directly in the outer repo.
 
 ## Provenance record
 

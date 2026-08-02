@@ -68,10 +68,18 @@ IDATs present, or the `format = "file"` root targets error out.
 `run_targets.sh`'s absolute-path hardcoding and `_targets.R`'s lack of an environment
 override were both **fixed by `MET-05`** (`Sys.getenv("BATCH1_IDAT_DIR"/"BATCH2_IDAT_DIR",
 <default>)`). `MET-06` then replaced the *default* each falls back to with a repo-relative
-symlink path (`here("idat_links", "batch1_idats")` / `here("idat_links", "batch2_idats")`)
-instead of a one-user, one-mount absolute path — see `data-raw/idat_links/`, two symlinks
-tracked in git (lightweight objects; no data duplicated) pointing at wherever the real
-IDATs currently live. The `Sys.getenv()` escape hatch from `MET-05` is unchanged.
+indirection layer instead of a one-user, one-mount absolute path baked into this file —
+see `data-raw/idat_links/`. The `Sys.getenv()` escape hatch from `MET-05` is unchanged.
+
+**Mechanism updated by `MET-09`:** `MET-06` originally implemented the indirection as two
+tracked OS symlinks (`idat_links/batch1_idats`, `idat_links/batch2_idats`). Publishing this
+package as its own repo (`MET-09`) found that `R CMD build`'s initial staging copy
+(`cp -pLR`, dereferencing every symlink) aborts on dangling symlinks *before*
+`.Rbuildignore` is ever read — and these are dangling by design off-cluster. The symlinks
+are now tracked plain-text pointer files (`idat_links/batch1_idats.path` /
+`batch2_idats.path`, one absolute path per line), read via `read_idat_link()` in
+`_targets.R`. Same one-source-of-truth indirection, no filesystem symlink for `R CMD build`
+to walk.
 
 **Batch2 history** (preserved, extended — do not delete): for a long time the pipeline
 deliberately did **not** use the data-warehouse copy of batch2, because that copy carried
@@ -90,7 +98,7 @@ all 48/48 Grn and all 48/48 Red idat files through its
 `<Sentrix_ID>/<Sentrix_ID>_<Sentrix_Position>` subdirectory layout — the original layout
 concern does not hold (or no longer does). `md5sum` of all 96 files against the `dcl01`
 copy found them byte-identical, with matching `Sample_Name` assignment for all 48 samples.
-**Batch2 is now repointed to the durable warehouse copy** (`idat_links/batch2_idats`);
+**Batch2 is now repointed to the durable warehouse copy** (`idat_links/batch2_idats.path`);
 the `dcl01` copy remains on disk (untouched) but is no longer the default.
 
 ## Change 002

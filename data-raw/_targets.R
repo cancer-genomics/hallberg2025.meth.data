@@ -74,18 +74,26 @@ tar_source("R/env_check.R")
 
 epath <- function(...) here("..", "..", "extdata", ...)
 
+## Reads the absolute path out of a tracked idat_links/*.path pointer file
+## (MET-09: real OS symlinks here broke `R CMD build`'s cp -pLR staging copy --
+## it dereferences every symlink before .Rbuildignore is ever consulted, and
+## aborts on the dangling ones these deliberately are off-cluster. A tracked
+## plain-text pointer carries the same one-source-of-truth path without being
+## a filesystem symlink R's build step has to walk).
+read_idat_link <- function(name) trimws(readLines(here("idat_links", name), n = 1L))
+
 ## >>> IDAT-DIR PATHS. <<<
-## Both default to repo-relative symlinks in idat_links/ (tracked in git, no data
-## duplicated) rather than a hardcoded absolute cluster path -- MET-06. The
-## Sys.getenv() override from MET-05 is kept unchanged: any deployment off this
-## cluster (or onto a different mount of the same data) can still override
-## without touching this file.
+## Both default to a repo-relative pointer file in idat_links/ (tracked in git)
+## rather than a hardcoded absolute cluster path -- MET-06, mechanism updated by
+## MET-09. The Sys.getenv() override from MET-05 is kept unchanged: any
+## deployment off this cluster (or onto a different mount of the same data) can
+## still override without touching this file.
 ##
 ## batch1: durable Azure-backed data-warehouse copy (numbered sentrix dirs only;
 ##   no GenomeStudio folder, so format="file" hashes it cleanly). Alt (verified,
 ##   48 EPIC): /dcl01/scharpf1/data/dhallber/endomuc/methylation
 BATCH1_IDAT_DIR <- Sys.getenv("BATCH1_IDAT_DIR",
-  here("idat_links", "batch1_idats"))
+  read_idat_link("batch1_idats.path"))
 ## batch2: history -- NOT the data-warehouse copy for a long time, because that
 ##   copy carried a GenomeStudio JHU_EST_1941_GSFile/ subdir owned by skoul, mode
 ##   drwxr----- (group had no traverse bit), which made format="file" fail with
@@ -108,7 +116,7 @@ BATCH1_IDAT_DIR <- Sys.getenv("BATCH1_IDAT_DIR",
 ##   Batch2 is therefore now repointed to the durable warehouse copy; dcl01
 ##   remains on disk but is no longer the default.
 BATCH2_IDAT_DIR <- Sys.getenv("BATCH2_IDAT_DIR",
-  here("idat_links", "batch2_idats"))
+  read_idat_link("batch2_idats.path"))
 
 list(
 
