@@ -1,0 +1,13 @@
+# Build artifacts — never commit
+data-raw/_targets/
+data-raw/_targets_change002_delta/
+data-raw/logs/
+data-raw/*.log
+data-raw/slurm-*.out
+
+# MET-08: informal internal working notes -- excluded here so a fresh git init
+# (MET-09, publishing this directory as cancer-genomics/OsMethExpData) never
+# picks them up. Stay tracked in the private outer repo; not untracked here.
+data-raw/step4_inputs_locator_results.txt
+notes_shashi.org
+data-raw/locate_step4_inputs.sh

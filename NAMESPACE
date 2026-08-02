@@ -1,0 +1,7 @@
+# Package namespace exports
+# Hand-written (roxygen2 is not available in this project's renv library --
+# see cards/MET-01-make-package-installable.md Notes/log). Regenerate with
+# roxygen2::roxygenise() once the tooling is installed; keep in sync with the
+# roxygen comment blocks in R/accessors.R until then.
+
+export(methylation_se)

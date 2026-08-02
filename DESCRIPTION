@@ -1,0 +1,20 @@
+Package: OsMethExpData
+Title: Pre-computed Methylation Data Objects for Hallberg et al. 2025 Ovarian Subtypes
+Version: 0.1.0
+Authors@R:
+    person("Rob", "Scharpf", , "rscharpf@jhu.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-4702-2656"))
+Description: Companion data package for Hallberg et al. 2025 (Cancer Research
+    Communications). Provides the methylation SummarizedExperiment consumed by
+    the manuscript pipeline in cancer-genomics/hallberg2025. The data-raw/
+    directory contains the generating pipeline (targets-based), which verifies
+    reproducibility back through successive raw-data frontiers, one generation
+    at a time -- see provenance/methylation_provenance_verification_plan.md in
+    the source (private) repository for the full provenance DAG and step sequence.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0
