@@ -1,6 +1,6 @@
 ## Card MET-03 -- per-layer regressions for the methylation provenance chain.
 ##
-## The chain (OsMethExpData/data-raw/_targets.R, data-raw/CLAUDE.md "The DAG")
+## The chain (hallberg2025.meth.data/data-raw/_targets.R, data-raw/CLAUDE.md "The DAG")
 ## was cleared one layer at a time -- matrices, orse, se_lab_tcga, leaf -- but
 ## each clearance exists only as a diagnostic `*_check`/`verification` target
 ## inside the pipeline (deliberately non-enforcing: they return structures,
