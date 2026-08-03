@@ -12,7 +12,7 @@
 ## script runs is why this exists as a targets pipeline rather than a
 ## one-off script.
 ##
-## Run from OsMethExpData/data-raw/:
+## Run from hallberg2025.meth.data/data-raw/:
 ##   Rscript -e "targets::tar_make(script = 'change002_delta_targets.R',
 ##                                  store = '_targets_change002_delta',
 ##                                  callr_function = NULL)"

@@ -1,5 +1,5 @@
 ## R does not search parent directories for .Rprofile -- without this file,
-## Rscript invoked from OsMethExpData/data-raw/ (as this pipeline's own
+## Rscript invoked from hallberg2025.meth.data/data-raw/ (as this pipeline's own
 ## _targets.R header instructs) falls back to ~/.Rprofile, which sets a
 ## personal library incompatible with this project's renv library and
 ## crashes on dyn.load() (observed 2026-07-04: rlang.so built for a

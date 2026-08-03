@@ -1,4 +1,4 @@
-Package: OsMethExpData
+Package: hallberg2025.meth.data
 Title: Pre-computed Methylation Data Objects for Hallberg et al. 2025 Ovarian Subtypes
 Version: 0.1.0
 Authors@R:

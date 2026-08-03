@@ -11,7 +11,7 @@
 ## (see the Step-5 diagnosis); set BATCH <- 2 to view the reproducing batch.
 ##
 ##   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/bin/Rscript \
-##     OsMethExpData/data-raw/plot_beta_concordance.R
+##     hallberg2025.meth.data/data-raw/plot_beta_concordance.R
 
 suppressMessages({
   library(targets)
@@ -26,21 +26,21 @@ N_PROBES_PLOT <- 30000L  # probes subsampled per panel for the scatter (r/maxdif
 
 ## ---- locate inputs (works under Rscript, source(), or line-by-line) --------
 ## Walk up from the current dir to the project root: the dir that holds both
-## extdata/ and OsMethExpData/. Robust regardless of the session's getwd().
+## extdata/ and hallberg2025.meth.data/. Robust regardless of the session's getwd().
 find_root <- function(start = getwd()) {
   d <- normalizePath(start, mustWork = TRUE)
   repeat {
     if (dir.exists(file.path(d, "extdata")) &&
-        dir.exists(file.path(d, "OsMethExpData"))) return(d)
+        dir.exists(file.path(d, "hallberg2025.meth.data"))) return(d)
     parent <- dirname(d)
     if (parent == d)
-      stop("Could not locate project root (a dir containing extdata/ and OsMethExpData/) ",
+      stop("Could not locate project root (a dir containing extdata/ and hallberg2025.meth.data/) ",
            "above ", start)
     d <- parent
   }
 }
 PROJ    <- find_root()
-data_raw <- file.path(PROJ, "OsMethExpData", "data-raw")
+data_raw <- file.path(PROJ, "hallberg2025.meth.data", "data-raw")
 store    <- file.path(data_raw, "_targets")
 extdata  <- file.path(PROJ, "extdata")
 

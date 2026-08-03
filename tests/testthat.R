@@ -1,4 +1,4 @@
 library(testthat)
-library(OsMethExpData)
+library(hallberg2025.meth.data)
 
-test_check("OsMethExpData")
+test_check("hallberg2025.meth.data")

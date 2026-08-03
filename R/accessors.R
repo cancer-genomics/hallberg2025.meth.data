@@ -1,5 +1,5 @@
 .load <- function(filename) {
-  path <- system.file("extdata", filename, package = "OsMethExpData",
+  path <- system.file("extdata", filename, package = "hallberg2025.meth.data",
                       mustWork = TRUE)
   readRDS(path)
 }

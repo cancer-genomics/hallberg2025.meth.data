@@ -10,7 +10,7 @@ PHI_COLUMNS <- c("basename", "pgdx_id", "bamfile", "bam_local", "genotype_id",
                   "facet_id", "size")
 
 test_that("methylation_se is exported and is a zero-argument function", {
-  expect_true(exists("methylation_se", where = asNamespace("OsMethExpData"),
+  expect_true(exists("methylation_se", where = asNamespace("hallberg2025.meth.data"),
                       inherits = FALSE))
   expect_true(is.function(methylation_se))
   expect_length(formals(methylation_se), 0)
@@ -45,7 +45,7 @@ test_that("methylation_se() colData carries no PHI columns", {
 ##   2. If intentional (e.g. a later card re-derives the object on purpose),
 ##      update the baseline:
 ##        Rscript -e "
-##          se <- OsMethExpData::methylation_se()
+##          se <- hallberg2025.meth.data::methylation_se()
 ##          saveRDS(digest::digest(se, algo = 'sha256'),
 ##                  'tests/testthat/methylation_se_hash_baseline.rds')
 ##        "

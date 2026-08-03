@@ -1,5 +1,5 @@
 ## ENV-03: environment capture and non-fatal drift reporting for the
-## methylation pipeline (OsMethExpData/data-raw).
+## methylation pipeline (hallberg2025.meth.data/data-raw).
 ##
 ## This arm has no install_deps.R / no GitHub pins of its own -- everything it
 ## needs (minfi, the EPIC annotation and manifest packages, SummarizedExperiment,
@@ -38,7 +38,7 @@ pkg_version <- function(pkg) {
 capture_environment <- function() {
     pkgs <- methylation_tracked_pkgs()
     list(
-        pipeline             = "OsMethExpData",
+        pipeline             = "hallberg2025.meth.data",
         captured_at          = Sys.time(),
         r_version            = as.character(getRversion()),
         BiocManager_version  = pkg_version("BiocManager"),

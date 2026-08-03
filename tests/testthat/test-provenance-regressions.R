@@ -39,7 +39,7 @@ skip_unless_store_available <- function() {
   testthat::skip_if_not(
     dir.exists(STORE_PATH),
     paste0(
-      "OsMethExpData/data-raw/_targets/ store not found at ", STORE_PATH, " -- ",
+      "hallberg2025.meth.data/data-raw/_targets/ store not found at ", STORE_PATH, " -- ",
       "provenance regressions compare against a cluster-populated cache (see ",
       "data-raw/CLAUDE.md 'Running it'); this is expected on a laptop clone ",
       "or in CI and is not a failure. Skipping."
@@ -183,7 +183,7 @@ test_that("se_lab_tcga layer: values within tol = 2e-3, colData labels exact (Ch
 ## ovarian.subtypes/data/methylation_se.rda -- the terminal gate. Accept
 ## either bit-identical (the expected/normal case) or, failing that,
 ## all.equal()-level numeric agreement on the assay; anything less means the
-## published object itself has drifted from what OsMethExpData ships.
+## published object itself has drifted from what hallberg2025.meth.data ships.
 test_that("leaf layer: methylation_se matches the committed baseline (verify_against_baseline)", {
   skip_unless_store_available()
   regen <- read_cached_target("methylation_se_regenerated")

@@ -1,4 +1,4 @@
-# OsMethExpData
+# hallberg2025.meth.data
 
 Companion data package for Hallberg et al. 2025 (*Cancer Research Communications*),
 methylation arm. Provides the methylation `SummarizedExperiment` consumed by the
@@ -25,5 +25,5 @@ companion package) in either direction.
 
 `data-raw/` contains the targets-based pipeline that produces `methylation_se` from JHU
 IDATs. See `data-raw/CLAUDE.md` for the DAG, frozen leaves, and tolerance regime, and
-`OsMethExpData/CLAUDE.md` for the arm-level orientation (known issues, card sequence,
+`hallberg2025.meth.data/CLAUDE.md` for the arm-level orientation (known issues, card sequence,
 zero-coupling boundary with `OsSeqExpData`).

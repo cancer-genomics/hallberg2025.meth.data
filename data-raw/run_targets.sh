@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=OsMethExpData
+#SBATCH --job-name=hallberg2025.meth.data
 #SBATCH --partition=cancergen,shared
 #SBATCH --time=18:00:00
 #SBATCH --mem=128G
@@ -16,7 +16,7 @@
 ## Invoke from this directory so the relative --output path above and SCRIPT_DIR
 ## below resolve correctly, e.g.:
 ##
-##   cd /path/to/2025.ovarian.subtypes/OsMethExpData/data-raw
+##   cd /path/to/2025.ovarian.subtypes/hallberg2025.meth.data/data-raw
 ##   sbatch run_targets.sh
 ##
 ## 128G/18h: read.metharray.exp + preprocessFunnorm on the full EPIC IDAT sets are
@@ -39,7 +39,7 @@ set -euo pipefail
 SCRIPT_DIR="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 cd "$SCRIPT_DIR"
 
-echo "Starting OsMethExpData unified pipeline"
+echo "Starting hallberg2025.meth.data unified pipeline"
 echo "  Node:    $(hostname)"
 echo "  Time:    $(date)"
 echo "  Job ID:  $SLURM_JOB_ID"

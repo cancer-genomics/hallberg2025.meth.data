@@ -6,7 +6,7 @@ data-raw/*.log
 data-raw/slurm-*.out
 
 # MET-08: informal internal working notes -- excluded here so a fresh git init
-# (MET-09, publishing this directory as cancer-genomics/OsMethExpData) never
+# (MET-09, publishing this directory as cancer-genomics/hallberg2025.meth.data) never
 # picks them up. Stay tracked in the private outer repo; not untracked here.
 data-raw/step4_inputs_locator_results.txt
 notes_shashi.org
