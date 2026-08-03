@@ -1,4 +1,4 @@
-# OsMethExpData/data-raw — the methylation provenance pipeline
+# hallberg2025.meth.data/data-raw — the methylation provenance pipeline
 
 One `targets` DAG, one store, expressing the whole chain from JHU IDATs down to the
 published `methylation_se`. **No trellis / FACETS / CNV context is needed here.**
@@ -72,7 +72,7 @@ indirection layer instead of a one-user, one-mount absolute path baked into this
 see `data-raw/idat_links/`. The `Sys.getenv()` escape hatch from `MET-05` is unchanged.
 
 **Mechanism updated by `MET-09`:** `MET-06` originally implemented the indirection as two
-tracked OS symlinks (`idat_links/batch1_idats`, `idat_links/batch2_idats`). Publishing this
+tracked OS symlinks (paths since renamed away — see below). Publishing this
 package as its own repo (`MET-09`) found that `R CMD build`'s initial staging copy
 (`cp -pLR`, dereferencing every symlink) aborts on dangling symlinks *before*
 `.Rbuildignore` is ever read — and these are dangling by design off-cluster. The symlinks
