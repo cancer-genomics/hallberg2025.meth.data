@@ -2,9 +2,9 @@
 ## (code/methylation_provenance_verification_plan.md).
 ##
 ## Frozen frontier: extdata/se_lab_tcga.rds + extdata/combmetadata.rds.
-## Code under test: the existing production chain in ovarian.subtypes/R/methylation.R
+## Code under test: the existing production chain in hallberg2025.base/R/methylation.R
 ##   (read_methylation_data -> check_against_manifest -> update_tcga_barcodes -> drop_signet).
-## Anchor: identical() against the committed ovarian.subtypes/data/methylation_se.rda.
+## Anchor: identical() against the committed hallberg2025.base/data/methylation_se.rda.
 
 strip_basename_column <- function(se) {
   colData(se) <- colData(se)[, setdiff(colnames(colData(se)), "basename")]
@@ -15,11 +15,11 @@ strip_basename_column <- function(se) {
 regenerate_methylation_se <- function(combmetadata_file, se_lab_tcga_file,
                                        manifest, discordant,
                                        match_table_file, signet_file) {
-  se <- ovarian.subtypes:::read_methylation_data(combmetadata_file, se_lab_tcga_file)
-  se <- ovarian.subtypes:::check_against_manifest(se, manifest, discordant)
+  se <- hallberg2025.base:::read_methylation_data(combmetadata_file, se_lab_tcga_file)
+  se <- hallberg2025.base:::check_against_manifest(se, manifest, discordant)
   match_table <- read.csv(match_table_file)
-  se <- ovarian.subtypes:::update_tcga_barcodes(se, match_table)
-  se <- ovarian.subtypes:::drop_signet(se, signet_file, match_table)
+  se <- hallberg2025.base:::update_tcga_barcodes(se, match_table)
+  se <- hallberg2025.base:::drop_signet(se, signet_file, match_table)
   strip_basename_column(se)
 }
 
@@ -43,10 +43,10 @@ regenerate_methylation_se_from_obj <- function(se_lab_tcga, combmetadata_file,
   SummarizedExperiment::colData(se_lab_tcga) <- S4Vectors::DataFrame(md)
   colnames(se_lab_tcga) <- se_lab_tcga$lab_id
 
-  se <- ovarian.subtypes:::check_against_manifest(se_lab_tcga, manifest, discordant)
+  se <- hallberg2025.base:::check_against_manifest(se_lab_tcga, manifest, discordant)
   match_table <- read.csv(match_table_file)
-  se <- ovarian.subtypes:::update_tcga_barcodes(se, match_table)
-  se <- ovarian.subtypes:::drop_signet(se, signet_file, match_table)
+  se <- hallberg2025.base:::update_tcga_barcodes(se, match_table)
+  se <- hallberg2025.base:::drop_signet(se, signet_file, match_table)
   strip_basename_column(se)
 }
 

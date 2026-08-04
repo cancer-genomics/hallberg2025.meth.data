@@ -5,7 +5,7 @@
 ## needs (minfi, the EPIC annotation and manifest packages, SummarizedExperiment,
 ## the whole CRAN/Bioconductor surface) comes from whatever conda_R/4.5.x
 ## resolves to on the cluster on a given day. There is no hard gate to mirror
-## OsSeqExpData's assert_pins() here, because there is nothing pinned to gate
+## hallberg2025.seq.data's assert_pins() here, because there is nothing pinned to gate
 ## against -- capture_environment()/check_environment_drift() are the whole
 ## story for this arm, and both are diagnostics: they report, they do not
 ## stop(). This mirrors the *_check / verification targets already in
@@ -18,7 +18,7 @@
 ##   capture_environment()              # list: sessionInfo, Bioconductor
 ##                                       #   release, explicit package versions
 ##   check_environment_drift()          # compares the live session against
-##                                       #   tests/snapshots/env_osmethexpdata.rds
+##                                       #   tests/snapshots/env_hallberg2025_meth_data.rds
 ##                                       #   and reports (never stop()s)
 
 ## The packages ENV-03's Evidence names for this arm, plus BiocManager itself.
@@ -34,7 +34,7 @@ pkg_version <- function(pkg) {
 
 ## The full environment snapshot: R version, Bioconductor release, and
 ## explicit versions for every tracked package. This is what ENV-03 writes to
-## tests/snapshots/env_osmethexpdata.rds.
+## tests/snapshots/env_hallberg2025_meth_data.rds.
 capture_environment <- function() {
     pkgs <- methylation_tracked_pkgs()
     list(
@@ -53,7 +53,7 @@ capture_environment <- function() {
 ## Returns a data.frame of the per-package comparison (invisibly) and, like
 ## every other *_check target in this DAG, reports rather than aborts.
 check_environment_drift <- function(capture_path = file.path("..", "..", "tests",
-                                                               "snapshots", "env_osmethexpdata.rds"),
+                                                               "snapshots", "env_hallberg2025_meth_data.rds"),
                                      live = capture_environment()) {
     if (!file.exists(capture_path)) {
         message("No environment capture at ", capture_path, "; nothing to compare against.")

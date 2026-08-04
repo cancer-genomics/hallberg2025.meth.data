@@ -1,8 +1,8 @@
 ## Card MET-02a ships inst/extdata/methylation_se.rds -- an exact copy of the
-## object published from ovarian.subtypes::methylation_se (digest-identical;
+## object published from hallberg2025.base::methylation_se (digest-identical;
 ## verified separately as part of MET-02a's Done-when). These tests check
 ## the real data-integrity contract now that a file exists to check,
-## mirroring OsSeqExpData/tests/testthat/test-data-integrity.R.
+## mirroring hallberg2025.seq.data/tests/testthat/test-data-integrity.R.
 
 ## PHI columns that must never appear in colData -- see repo CLAUDE.md
 ## "Columns stripped from published data objects".
@@ -40,7 +40,7 @@ test_that("methylation_se() colData carries no PHI columns", {
 ##   1. Confirm the change is intentional. MET-02a explicitly forbids
 ##      regenerating methylation_se from the data-raw/ pipeline to populate
 ##      this file -- it must stay an exact copy of the committed
-##      ovarian.subtypes::methylation_se object until BASE-03 removes that
+##      hallberg2025.base::methylation_se object until BASE-03 removes that
 ##      copy. An unexpected change here means the two copies have drifted.
 ##   2. If intentional (e.g. a later card re-derives the object on purpose),
 ##      update the baseline:

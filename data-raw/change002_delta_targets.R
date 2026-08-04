@@ -25,7 +25,7 @@
 library(targets)
 library(here)
 
-pkgload::load_all(here("..", "..", "ovarian.subtypes"), quiet = TRUE)
+pkgload::load_all(here("..", "..", "hallberg2025.base"), quiet = TRUE)
 
 tar_option_set(packages = c("SummarizedExperiment", "S4Vectors",
                              "tibble", "dplyr", "readr", "magrittr"))
@@ -49,27 +49,27 @@ list(
              format = "file"),
 
   tar_target(match_table_file,
-             here("..", "..", "ovarian.subtypes", "inst", "extdata", "match_table.csv"),
+             here("..", "..", "hallberg2025.base", "inst", "extdata", "match_table.csv"),
              format = "file"),
 
   tar_target(signet_file,
-             here("..", "..", "ovarian.subtypes", "inst", "extdata", "stomach_muc_signet.csv"),
+             here("..", "..", "hallberg2025.base", "inst", "extdata", "stomach_muc_signet.csv"),
              format = "file"),
 
   tar_target(raw_manifest_file,
-             here("..", "..", "ovarian.subtypes", "inst", "extdata", "manifest.rds"),
+             here("..", "..", "hallberg2025.base", "inst", "extdata", "manifest.rds"),
              format = "file"),
 
   tar_target(raw_manifest, readRDS(raw_manifest_file)),
 
-  tar_target(pkg_manifest,   { data(manifest,   package = "ovarian.subtypes"); manifest   }),
-  tar_target(pkg_discordant, { data(discordant, package = "ovarian.subtypes"); discordant }),
+  tar_target(pkg_manifest,   { data(manifest,   package = "hallberg2025.base"); manifest   }),
+  tar_target(pkg_discordant, { data(discordant, package = "hallberg2025.base"); discordant }),
 
   ## -- The two variants under comparison; identical inputs, differ only in
   ##    which build_se_lab_tcga is used. --------------------------------------
 
   tar_target(se_lab_tcga_corrected,
-             ovarian.subtypes:::build_se_lab_tcga(bValsselect_file, combmetadata_file,
+             hallberg2025.base:::build_se_lab_tcga(bValsselect_file, combmetadata_file,
                                                    se_jhu_file, raw_manifest)),
 
   tar_target(se_lab_tcga_buggy,

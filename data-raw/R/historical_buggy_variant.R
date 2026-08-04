@@ -7,7 +7,7 @@
 ## code/methylation_provenance_verification_plan.md, "Verification
 ## safeguards" / Step 0.
 ##
-## Differs from ovarian.subtypes:::build_se_lab_tcga() (ovarian.subtypes/R/
+## Differs from hallberg2025.base:::build_se_lab_tcga() (hallberg2025.base/R/
 ## methylation.R) in exactly two respects, both in the "additional JHU"
 ## block:
 ##   - no dplyr::arrange(match(lab_id, colnames(se.jhu3))) reordering
@@ -23,7 +23,7 @@ build_se_lab_tcga_buggy <- function(bValsselect_file, combmetadata_file, se_jhu_
                "Ovarian mucinous", "Colorectal mucinous",
                "Pancreas mucinous", "Stomach mucinous")
   manifest2 <- manifest %>%
-    ovarian.subtypes:::cancer_names() %>%
+    hallberg2025.base:::cancer_names() %>%
     dplyr::select(-tumor_type) %>%
     dplyr::rename(tumor_type = tumor, tumor = tumor.normal) %>%
     dplyr::mutate(study = "JHU", diagnosis = factor(tumor_type, dlevels),

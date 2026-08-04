@@ -60,9 +60,9 @@
 library(targets)
 library(here)
 
-## ovarian.subtypes is not installed -- load from source (callr_function = NULL
+## hallberg2025.base is not installed -- load from source (callr_function = NULL
 ## means the current R session is the worker, so load_all() suffices).
-pkgload::load_all(here("..", "..", "ovarian.subtypes"), quiet = TRUE)
+pkgload::load_all(here("..", "..", "hallberg2025.base"), quiet = TRUE)
 
 tar_option_set(packages = c("SummarizedExperiment", "S4Vectors",
                             "tibble", "dplyr", "readr", "magrittr",
@@ -130,7 +130,7 @@ list(
   ## methylationArrayAnalysis inst/extdata (md5 3bec72842c8c24fae1f9c80516c71397,
   ## 29233 probes) so reproduction needs no heavyweight Bioconductor install.
   tar_target(xreactive_file,
-             here("..", "..", "ovarian.subtypes", "inst", "extdata",
+             here("..", "..", "hallberg2025.base", "inst", "extdata",
                   "48639-non-specific-probes-Illumina450k.csv"),
              format = "file"),
 
@@ -161,13 +161,13 @@ list(
 
   ## == Step-1 static inputs =================================================
   tar_target(match_table_file,
-             here("..", "..", "ovarian.subtypes", "inst", "extdata", "match_table.csv"),
+             here("..", "..", "hallberg2025.base", "inst", "extdata", "match_table.csv"),
              format = "file"),
   tar_target(signet_file,
-             here("..", "..", "ovarian.subtypes", "inst", "extdata", "stomach_muc_signet.csv"),
+             here("..", "..", "hallberg2025.base", "inst", "extdata", "stomach_muc_signet.csv"),
              format = "file"),
   tar_target(baseline_file,
-             here("..", "..", "ovarian.subtypes", "data", "methylation_se.rda"),
+             here("..", "..", "hallberg2025.base", "data", "methylation_se.rda"),
              format = "file"),
 
   ## build_se_lab_tcga() matches the "additional JHU" columns of orse against a
@@ -175,17 +175,17 @@ list(
   ## the public manifest during the facets join. Use the raw, pre-facets-join
   ## manifest so those samples resolve.
   tar_target(raw_manifest_file,
-             here("..", "..", "ovarian.subtypes", "inst", "extdata", "manifest.rds"),
+             here("..", "..", "hallberg2025.base", "inst", "extdata", "manifest.rds"),
              format = "file"),
   tar_target(raw_manifest, readRDS(raw_manifest_file)),
-  tar_target(pkg_manifest,   { data(manifest,   package = "ovarian.subtypes"); manifest   }),
-  tar_target(pkg_discordant, { data(discordant, package = "ovarian.subtypes"); discordant }),
+  tar_target(pkg_manifest,   { data(manifest,   package = "hallberg2025.base"); manifest   }),
+  tar_target(pkg_discordant, { data(discordant, package = "hallberg2025.base"); discordant }),
 
   ## == Layer: IDATs -> bVals/mVals matrices (minfi) =========================
   tar_target(batch1_matrices,
-             ovarian.subtypes:::build_batch1_matrices(batch1_idat_dir, xreactive_file)),
+             hallberg2025.base:::build_batch1_matrices(batch1_idat_dir, xreactive_file)),
   tar_target(batch2_matrices,
-             ovarian.subtypes:::build_batch2_matrices(batch2_idat_dir, xreactive_file)),
+             hallberg2025.base:::build_batch2_matrices(batch2_idat_dir, xreactive_file)),
 
   ## Direct intermediate checks vs frozen matrices (tolerance -- minfi drift).
   tar_target(check_bVals_b1, compare_matrix(batch1_matrices$bVals, bVals_frozen_file)),
@@ -202,7 +202,7 @@ list(
   ## build_orse accepts matrices/targets1 as in-memory objects (rp() shim);
   ## baseDir for batch-2 targets is the batch-2 IDAT dir (holds the sample sheet).
   tar_target(orse_regenerated,
-             ovarian.subtypes:::build_orse(batch2_matrices$bVals, batch2_matrices$mVals,
+             hallberg2025.base:::build_orse(batch2_matrices$bVals, batch2_matrices$mVals,
                                            batch1_matrices$bVals, batch1_matrices$mVals,
                                            batch1_matrices$targets,
                                            methmanifest_file, batch2_idat_dir, methdat_file)),
@@ -211,7 +211,7 @@ list(
 
   ## == Layer: (orse + branch-C TCGA) -> se_lab_tcga =========================
   tar_target(se_lab_tcga_regenerated,
-             ovarian.subtypes:::build_se_lab_tcga(bValsselect_file, combmetadata_file,
+             hallberg2025.base:::build_se_lab_tcga(bValsselect_file, combmetadata_file,
                                                   orse_regenerated, raw_manifest)),
   ## JHU beta cols inherit <= 2/1000 drift from orse; TCGA cols exact; labels exact.
   tar_target(check_se_lab_tcga,

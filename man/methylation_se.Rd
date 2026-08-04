@@ -18,9 +18,9 @@ CG lab IDs.
 \details{
 Card \code{MET-02a} ships the underlying data file
 (\code{inst/extdata/methylation_se.rds}) as an exact copy of the object
-published from \code{ovarian.subtypes::methylation_se} -- same object,
+published from \code{hallberg2025.base::methylation_se} -- same object,
 digest-identical. No consumer has been repointed to this copy yet
-(\code{MAN-03}), and the \code{ovarian.subtypes} copy is not removed yet
+(\code{MAN-03}), and the \code{hallberg2025.base} copy is not removed yet
 (\code{BASE-03}); both copies are expected to coexist until that sequence
 completes.
 }
