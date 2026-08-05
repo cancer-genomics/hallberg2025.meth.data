@@ -40,7 +40,7 @@
 ##   se_lab_tcga : JHU beta cols = orse beta / 1000, so they inherit <= 2/1000
 ##              drift; TCGA cols are exact (branch-C frozen) -> tol = 2e-3. colData
 ##              labels (the Change-002 surface) are name-based -> expected exact.
-##   leaf     : verify_against_baseline vs the committed methylation_se.rda, then
+##   leaf     : verify_against_baseline vs the committed methylation_se.rds, then
 ##              the TERMINAL gate `Rscript tests/verify_snapshot.R` at the repo root.
 ##
 ## All *_check / verification targets are DIAGNOSTICS: they return structures, they
@@ -167,7 +167,7 @@ list(
              here("..", "..", "hallberg2025.base", "inst", "extdata", "stomach_muc_signet.csv"),
              format = "file"),
   tar_target(baseline_file,
-             here("..", "..", "hallberg2025.base", "data", "methylation_se.rda"),
+             here("..", "inst", "extdata", "methylation_se.rds"),
              format = "file"),
 
   ## build_se_lab_tcga() matches the "additional JHU" columns of orse against a

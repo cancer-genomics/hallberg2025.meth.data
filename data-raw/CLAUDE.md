@@ -36,7 +36,7 @@ assay-level check below it.
 | matrices | `compare_matrix` — set overlap + finite max diff | minfi funnorm is not bit-reproducible across versions |
 | `orse` | `compare_orse(tol = 2)` | deterministic arithmetic, but integer-encoded (beta ×1000 / M ×100), so sub-permille matrix drift flips an integer by ±1 |
 | `se_lab_tcga` | `tol = 2e-3`; colData labels expected **exact** | JHU beta cols inherit ≤2/1000 drift from `orse`; TCGA cols are exact (frozen); labels are name-based — and labels are the Change-002 surface |
-| leaf | `verify_against_baseline` vs the committed `methylation_se.rda`, then `Rscript tests/verify_snapshot.R` at the repo root | the terminal gate |
+| leaf | `verify_against_baseline` vs the committed `methylation_se.rds` (`inst/extdata/`), then `Rscript tests/verify_snapshot.R` at the repo root | the terminal gate |
 
 **All `*_check` / `verification` targets are diagnostics.** They return structures; they do
 not `stop()`. A tolerance miss is a reported value, not a build error — that is deliberate,

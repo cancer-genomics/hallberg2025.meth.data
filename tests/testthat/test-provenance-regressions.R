@@ -180,7 +180,7 @@ test_that("se_lab_tcga layer: values within tol = 2e-3, colData labels exact (Ch
 
 ## ── Layer 4: leaf (methylation_se, the published object) ──────────────────
 ## Tolerance: verify_against_baseline() against the committed
-## hallberg2025.base/data/methylation_se.rda -- the terminal gate. Accept
+## hallberg2025.meth.data/inst/extdata/methylation_se.rds -- the terminal gate. Accept
 ## either bit-identical (the expected/normal case) or, failing that,
 ## all.equal()-level numeric agreement on the assay; anything less means the
 ## published object itself has drifted from what hallberg2025.meth.data ships.

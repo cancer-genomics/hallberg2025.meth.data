@@ -193,9 +193,11 @@ beta_cor <- function(regenerated, frozen_file, threshold = 0.99) {
 }
 
 verify_against_baseline <- function(regenerated, baseline_file) {
-  e <- new.env()
-  load(baseline_file, envir = e)
-  baseline <- e$methylation_se
+  ## baseline_file is now the .rds methylation_se ships as (hallberg2025.meth.data/
+  ## inst/extdata/methylation_se.rds, per MET-02a/BASE-03) -- readRDS(), not load();
+  ## the committed hallberg2025.base/data/methylation_se.rda this once pointed at was
+  ## deleted by BASE-03.
+  baseline <- readRDS(baseline_file)
   is_identical <- identical(regenerated, baseline)
   list(
     identical = is_identical,
