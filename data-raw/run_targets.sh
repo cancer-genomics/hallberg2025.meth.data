@@ -75,6 +75,12 @@ IMAGE="$SCRIPT_DIR/hallberg2025-meth-data-raw.sif"
 ## explicit --bind can't even see them), so both this and PROJECT_ROOT (covering the
 ## repo-relative `../..` reads: hallberg2025.base, tests/) must be passed explicitly.
 IDAT_ROOT=/dcs07/scharpf/data/data-warehouse/methyl-epic
+## The batch2 frozen-frontier symlinks in extdata/ (bVals081820.rds, meth_081720,
+## etc. -- see this pipeline's own docs, "Batch2 history") resolve to absolute
+## /dcl01/scharpf1/... targets. Same missing-auto-bind issue as /dcs07/dcs11 above,
+## confirmed empirically (ENV-18): without this, targets sees them as missing files
+## even though they resolve fine on the bare host.
+DCL01_ROOT=/dcl01/scharpf1
 
 ## data-raw/.Rprofile re-sources the project root's .Rprofile (see its own header),
 ## which activates uvr's host library (.uvr/library) -- exactly the "global dotfile
@@ -88,7 +94,7 @@ IDAT_ROOT=/dcs07/scharpf/data/data-warehouse/methyl-epic
 export SINGULARITYENV_R_PROFILE_USER=/dev/null
 
 sing() {
-  singularity exec --bind "$PROJECT_ROOT" --bind "$IDAT_ROOT" "$IMAGE" "$@"
+  singularity exec --bind "$PROJECT_ROOT" --bind "$IDAT_ROOT" --bind "$DCL01_ROOT" "$IMAGE" "$@"
 }
 
 echo "Image:   $IMAGE"
