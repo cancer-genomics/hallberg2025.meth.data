@@ -51,6 +51,37 @@ Cold runs are **cluster-only** (IDATs, minfi, memory):
 sbatch run_targets.sh                     # on JHPCE
 ```
 
+**`ENV-18` (2026-08-05): the R/package layer now runs inside a pinned Apptainer
+image** (`hallberg2025-meth-data-raw.sif`, built from `docker/Dockerfile.meth-data-raw`,
+`ENV-17`) instead of `module load conda_R/4.5.x` — closes the gap this project's own
+`REPRODUCIBILITY_PLAN.qmd` flagged as "a reproducibility claim resting on a log line, not
+a committed artifact." SLURM submission itself is unchanged. JHPCE ships the tool as
+`singularity`, not `apptainer` (same `docker://`-derived image/CLI surface). Confirmed
+end-to-end on the real cluster tree, real IDATs, both batches: the containerized
+recompute of `batch1_matrices`/`batch2_matrices` from raw IDATs reproduces every
+diagnostic number (`finite_maxdiff`, correlations, `check_orse`/`check_se_lab_tcga`
+diffs, `verification`) **exactly** against the last real module-based run
+(`slurm-34256940.out`, 2026-07-19) — containerization introduced zero new drift. The
+non-identical-but-highly-correlated tolerance results themselves (`within_tol: FALSE`
+throughout) are a pre-existing, already-documented condition (see "Tolerance regime"
+above) unrelated to this cutover, not something this card resolved or needs to.
+
+Two Apptainer/JHPCE-specific gotchas, both real and non-obvious, worth knowing before
+touching `run_targets.sh` again:
+- The `singularity` module (version 3.11.4) calls `os.getenv("HOSTNAME")`, unset in a
+  non-login batch shell by default — `run_targets.sh` exports it first.
+- Singularity doesn't auto-bind any cluster storage mount (`/dcs07`, `/dcs11`,
+  `/dcl01`, all needed here) — every one must be passed via explicit `--bind`.
+- `data-raw/.Rprofile` re-sources the project root's `.Rprofile` (see its own header),
+  which activates `uvr`'s host-managed library — invisible to a normal `Rscript`
+  call, but since R sources `.Rprofile` from cwd regardless of container boundaries,
+  this silently overrode the container's own baked-in packages until
+  `run_targets.sh` set `SINGULARITYENV_R_PROFILE_USER=/dev/null`.
+
+If Apptainer/registry access ever becomes unreliable on JHPCE, `module load
+conda_R/4.5.x` (the invocation this replaced) remains a documented fallback — see git
+history on `run_targets.sh` for the pre-`ENV-18` version.
+
 Downstream-only re-runs work anywhere once a cluster run has populated `_targets/`:
 
 ```r
