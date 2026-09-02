@@ -80,17 +80,9 @@ epath <- function(...) here("..", "..", "extdata", ...)
 ## aborts on the dangling ones these deliberately are off-cluster. A tracked
 ## plain-text pointer carries the same one-source-of-truth path without being
 ## a filesystem symlink R's build step has to walk).
-read_idat_link <- function(name) {
-  f <- here("idat_links", name)
-  if (!file.exists(f)) {
-    stop("Missing IDAT pointer file: ", f, "\n",
-         "MET-13: the pointer files are gitignored -- they held absolute cluster ",
-         "paths and this is a public repo.\n",
-         "Fix either way:\n",
-         "  cp ", f, ".example ", f, "   # then edit in the local IDAT directory\n",
-         "  export BATCH1_IDAT_DIR=... BATCH2_IDAT_DIR=...  # bypasses these files",
-         call. = FALSE)
-  }
+## Takes a resolved path, not a name -- idat_dir() below has already established
+## that the file exists.
+read_idat_link <- function(f) {
   ## Skip blank lines and #-comments rather than blindly taking line 1: the
   ## .path.example template leads with instructions, so a file copied from it and
   ## edited anywhere below would otherwise read a comment as the path.
@@ -103,25 +95,58 @@ read_idat_link <- function(name) {
   ln[1L]
 }
 
+## Absolute path to one IDAT directory: the environment variable if set, else the
+## idat_links/ pointer file, else a self-describing sentinel.
+##
+## Two things this has to get right, both learned the hard way (MET-14):
+##
+## 1. `Sys.getenv(var, read_idat_link(name))` does NOT short-circuit. Sys.getenv()
+##    calls as.character() on `unset` before it consults the environment, which
+##    forces the promise -- so the fallback ran, and stopped, even when the
+##    variable was set. The override was documented in three places and worked in
+##    none of them. Read the variable first, explicitly.
+##
+## 2. This runs at FILE SCOPE, so it runs every time _targets.R is sourced --
+##    including under tar_validate(), a static DAG check that reads no IDAT and
+##    touches no cluster. Stopping here left a fresh clone unable to validate at
+##    all, which failed CI at step 12 of 23 and skipped the eleven steps after it.
+##    An unconfigured directory must fail at tar_make() time, where the
+##    format="file" target actually needs it, not at definition time.
+idat_dir <- function(var, name) {
+  from_env <- Sys.getenv(var, unset = "")
+  if (nzchar(from_env)) return(from_env)
+
+  f <- here("idat_links", name)
+  if (file.exists(f)) return(read_idat_link(f))
+
+  message("No IDAT directory configured for ", var, ".\n",
+          "MET-13: the pointer files are gitignored -- they held absolute cluster ",
+          "paths and this repo is public. Only *.path.example ships.\n",
+          "The pipeline can still be validated; it cannot be run. Fix either way:\n",
+          "  cp ", f, ".example ", f, "   # then edit in the local IDAT directory\n",
+          "  export ", var, "=...                      # bypasses that file entirely")
+  sprintf("<unconfigured IDAT directory: set %s, or fill in %s>", var, f)
+}
+
 ## >>> IDAT-DIR PATHS. <<<
 ## Both default to a repo-relative pointer file in idat_links/ rather than a
 ## hardcoded absolute cluster path -- MET-06, mechanism updated by MET-09. The
-## Sys.getenv() override from MET-05 is kept unchanged: any deployment off this
-## cluster (or onto a different mount of the same data) can still override
-## without touching this file.
+## Sys.getenv() override from MET-05 is kept: any deployment off this cluster (or
+## onto a different mount of the same data) can still override without touching
+## this file. MET-14 is what made that override actually work.
 ##
 ## MET-13: the pointer files themselves are NO LONGER tracked -- this repo is
 ## public and their entire content was an absolute lab cluster path. Only
 ## *.path.example ships. A fresh clone therefore needs one setup step before
-## data-raw can run: copy an .example and fill it in, or set the two env vars.
-## read_idat_link() above fails with those instructions rather than a bare
-## readLines() error.
+## data-raw can RUN: copy an .example and fill it in, or set the two env vars.
+## It needs no setup at all to be VALIDATED -- idat_dir() above explains itself
+## and returns a sentinel rather than stopping, so tar_validate() works on a bare
+## clone (MET-14; stopping here had been failing CI at step 12 of 23).
 ##
 ## batch1: durable Azure-backed data-warehouse copy (numbered sentrix dirs only;
 ##   no GenomeStudio folder, so format="file" hashes it cleanly). An alternate
 ##   copy on dcl01 scratch, under dhallber's tree, was also verified (48 EPIC).
-BATCH1_IDAT_DIR <- Sys.getenv("BATCH1_IDAT_DIR",
-  read_idat_link("batch1_idats.path"))
+BATCH1_IDAT_DIR <- idat_dir("BATCH1_IDAT_DIR", "batch1_idats.path")
 ## batch2: history -- NOT the data-warehouse copy for a long time, because that
 ##   copy carried a GenomeStudio JHU_EST_1941_GSFile/ subdir owned by skoul, mode
 ##   drwxr----- (group had no traverse bit), which made format="file" fail with
@@ -142,8 +167,7 @@ BATCH1_IDAT_DIR <- Sys.getenv("BATCH1_IDAT_DIR",
 ##   byte-identical, and Sample_Name assignment matched for all 48 samples.
 ##   Batch2 is therefore now repointed to the durable warehouse copy; dcl01
 ##   remains on disk but is no longer the default.
-BATCH2_IDAT_DIR <- Sys.getenv("BATCH2_IDAT_DIR",
-  read_idat_link("batch2_idats.path"))
+BATCH2_IDAT_DIR <- idat_dir("BATCH2_IDAT_DIR", "batch2_idats.path")
 
 list(
 
