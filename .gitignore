@@ -11,3 +11,8 @@ data-raw/slurm-*.out
 data-raw/step4_inputs_locator_results.txt
 notes_shashi.org
 data-raw/locate_step4_inputs.sh
+
+# DOC-13: AI assistant context files are internal (lab SOP, sop.reproducibility ->
+# release.qmd, "AI assistant context files stay internal"). No leading slash, so this
+# also catches data-raw/CLAUDE.md. Both remain tracked in the private outer repo.
+CLAUDE.md
