@@ -80,18 +80,46 @@ epath <- function(...) here("..", "..", "extdata", ...)
 ## aborts on the dangling ones these deliberately are off-cluster. A tracked
 ## plain-text pointer carries the same one-source-of-truth path without being
 ## a filesystem symlink R's build step has to walk).
-read_idat_link <- function(name) trimws(readLines(here("idat_links", name), n = 1L))
+read_idat_link <- function(name) {
+  f <- here("idat_links", name)
+  if (!file.exists(f)) {
+    stop("Missing IDAT pointer file: ", f, "\n",
+         "MET-13: the pointer files are gitignored -- they held absolute cluster ",
+         "paths and this is a public repo.\n",
+         "Fix either way:\n",
+         "  cp ", f, ".example ", f, "   # then edit in the local IDAT directory\n",
+         "  export BATCH1_IDAT_DIR=... BATCH2_IDAT_DIR=...  # bypasses these files",
+         call. = FALSE)
+  }
+  ## Skip blank lines and #-comments rather than blindly taking line 1: the
+  ## .path.example template leads with instructions, so a file copied from it and
+  ## edited anywhere below would otherwise read a comment as the path.
+  ln <- trimws(readLines(f, warn = FALSE))
+  ln <- ln[nzchar(ln) & !startsWith(ln, "#")]
+  if (!length(ln)) {
+    stop("No path found in ", f, " -- every line is blank or a comment.\n",
+         "Put the absolute IDAT directory on a line of its own.", call. = FALSE)
+  }
+  ln[1L]
+}
 
 ## >>> IDAT-DIR PATHS. <<<
-## Both default to a repo-relative pointer file in idat_links/ (tracked in git)
-## rather than a hardcoded absolute cluster path -- MET-06, mechanism updated by
-## MET-09. The Sys.getenv() override from MET-05 is kept unchanged: any
-## deployment off this cluster (or onto a different mount of the same data) can
-## still override without touching this file.
+## Both default to a repo-relative pointer file in idat_links/ rather than a
+## hardcoded absolute cluster path -- MET-06, mechanism updated by MET-09. The
+## Sys.getenv() override from MET-05 is kept unchanged: any deployment off this
+## cluster (or onto a different mount of the same data) can still override
+## without touching this file.
+##
+## MET-13: the pointer files themselves are NO LONGER tracked -- this repo is
+## public and their entire content was an absolute lab cluster path. Only
+## *.path.example ships. A fresh clone therefore needs one setup step before
+## data-raw can run: copy an .example and fill it in, or set the two env vars.
+## read_idat_link() above fails with those instructions rather than a bare
+## readLines() error.
 ##
 ## batch1: durable Azure-backed data-warehouse copy (numbered sentrix dirs only;
-##   no GenomeStudio folder, so format="file" hashes it cleanly). Alt (verified,
-##   48 EPIC): /dcl01/scharpf1/data/dhallber/endomuc/methylation
+##   no GenomeStudio folder, so format="file" hashes it cleanly). An alternate
+##   copy on dcl01 scratch, under dhallber's tree, was also verified (48 EPIC).
 BATCH1_IDAT_DIR <- Sys.getenv("BATCH1_IDAT_DIR",
   read_idat_link("batch1_idats.path"))
 ## batch2: history -- NOT the data-warehouse copy for a long time, because that
@@ -106,9 +134,8 @@ BATCH1_IDAT_DIR <- Sys.getenv("BATCH1_IDAT_DIR",
 ##   JHU_EST_1941_GSFile/` on the warehouse copy, and Shashi did so -- confirmed
 ##   via `namei -l` showing a group traverse (x) bit the length of the path.
 ##   MET-06 then re-checked the layout claim directly: minfi::read.metharray.sheet()
-##   against the warehouse copy
-##   (/dcs07/scharpf/data/data-warehouse/methyl-epic/ovarian-subtypes-2020-08-17)
-##   resolves all 48/48 Grn and all 48/48 Red idat files via its
+##   against the batch2 warehouse copy (the path idat_links/batch2_idats.path
+##   points at) resolves all 48/48 Grn and all 48/48 Red idat files via its
 ##   <Sentrix_ID>/<Sentrix_ID>_<Sentrix_Position> subdirectory layout -- the
 ##   layout claim was wrong, or true of an earlier state that no longer holds.
 ##   md5sum comparison of all 96 files against the dcl01 copy found them

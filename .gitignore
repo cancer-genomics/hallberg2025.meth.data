@@ -16,3 +16,9 @@ data-raw/locate_step4_inputs.sh
 # release.qmd, "AI assistant context files stay internal"). No leading slash, so this
 # also catches data-raw/CLAUDE.md. Both remain tracked in the private outer repo.
 CLAUDE.md
+
+# MET-13: the IDAT pointer files' entire content is an absolute lab cluster path
+# and this repo is public. Only the .example templates ship; a real .path file is
+# local setup (or bypass both with BATCH1_IDAT_DIR / BATCH2_IDAT_DIR).
+data-raw/idat_links/*.path
+!data-raw/idat_links/*.path.example

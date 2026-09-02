@@ -1,0 +1,8 @@
+# MET-13: copy this file to batch2_idats.path and replace the line below with the
+# absolute path to the batch2 IDAT directory on your system. The real .path files
+# are gitignored -- their entire content was an internal cluster path and this repo
+# is public. Setting BATCH2_IDAT_DIR in the environment bypasses this file entirely.
+#
+# batch2: the warehouse copy whose <Sentrix_ID>/<Sentrix_ID>_<Sentrix_Position>
+# subdirectory layout resolves all 48/48 Grn and 48/48 Red idat files (MET-06).
+/replace/with/absolute/path/to/batch2/idats

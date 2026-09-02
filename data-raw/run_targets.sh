@@ -62,6 +62,10 @@ echo ""
 export HOSTNAME="$(hostname)"
 
 source /usr/share/lmod/lmod/init/bash
+## MET-13: these two /jhpce/shared/... paths are DELIBERATELY KEPT. Unlike the
+## data-warehouse paths below, they are JHPCE's public module tree, not lab data
+## locations -- `module load singularity` cannot resolve without them. Do not
+## remove them in a later cluster-path sweep; doing so silently breaks the runner.
 module use /jhpce/shared/community/modulefiles
 module use /jhpce/shared/jhpce/modulefiles
 set +u
@@ -71,16 +75,22 @@ set -u
 IMAGE="$SCRIPT_DIR/hallberg2025-meth-data-raw.sif"
 ## The two IDAT dirs (idat_links/*.path, MET-05/MET-06's env-var indirection) share
 ## this parent -- bind it once. singularity does NOT auto-bind cluster storage
-## mounts like /dcs07 or /dcs11 (confirmed empirically, ENV-18 -- a container without
-## explicit --bind can't even see them), so both this and PROJECT_ROOT (covering the
-## repo-relative `../..` reads: hallberg2025.base, tests/) must be passed explicitly.
-IDAT_ROOT=/dcs07/scharpf/data/data-warehouse/methyl-epic
+## mounts (confirmed empirically, ENV-18 -- a container without explicit --bind
+## can't even see them), so both this and PROJECT_ROOT (covering the repo-relative
+## `../..` reads: hallberg2025.base, tests/) must be passed explicitly.
+##
+## MET-13: required from the environment rather than hardcoded -- this repo is
+## public and the literal value is an internal lab storage path. Set it to the
+## parent directory shared by the two IDAT batch directories.
+IDAT_ROOT="${IDAT_ROOT:?set IDAT_ROOT to the parent of the two IDAT batch dirs (see data-raw/CLAUDE.md)}"
 ## The batch2 frozen-frontier symlinks in extdata/ (bVals081820.rds, meth_081720,
 ## etc. -- see this pipeline's own docs, "Batch2 history") resolve to absolute
-## /dcl01/scharpf1/... targets. Same missing-auto-bind issue as /dcs07/dcs11 above,
-## confirmed empirically (ENV-18): without this, targets sees them as missing files
-## even though they resolve fine on the bare host.
-DCL01_ROOT=/dcl01/scharpf1
+## targets on the older scratch filesystem. Same missing-auto-bind issue as
+## IDAT_ROOT above, confirmed empirically (ENV-18): without this, targets sees
+## them as missing files even though they resolve fine on the bare host.
+##
+## MET-13: required from the environment, same reasoning as IDAT_ROOT.
+DCL01_ROOT="${DCL01_ROOT:?set DCL01_ROOT to the scratch root the batch2 extdata symlinks resolve into (see data-raw/CLAUDE.md)}"
 
 ## data-raw/.Rprofile re-sources the project root's .Rprofile (see its own header),
 ## which activates uvr's host library (.uvr/library) -- exactly the "global dotfile
